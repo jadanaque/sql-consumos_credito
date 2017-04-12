@@ -1,0 +1,82 @@
+---
+title: "Consumos con Tarjeta de Crédito - Abril 2016"
+author: "Javier Adanaque"
+output:
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(magrittr)
+library(plotly)
+library(tidyverse)
+library(lubridate)
+library(RColorBrewer)
+library(googleVis)
+
+# Reading data
+db_consumos <- read_csv("data/query_output-consumos_abril.csv")
+
+#"ISO-8859-1"
+#"ISO-8859-2"
+
+```
+
+General
+=======================================================================
+
+
+Column1 {data-width=530}
+-----------------------------------------------------------------------
+
+### Distribuci&oacute;n Diaria
+
+```{r}
+
+```
+
+### Macrogiros
+
+```{r}
+
+```
+
+Column2 {data-width=470}
+-----------------------------------------------------------------------
+
+### Tiendas de Principales Macrogiros
+
+```{r}
+
+```
+> Electrónica / Supermercados / Ropa y Accesorios
+
+### Tiendas Top
+
+```{r}
+
+```
+
+SQL {data-orientation=rows}
+=======================================================================
+
+Row1 {data-width=300}
+-----------------------------------------------------------------------
+
+### SQL Query
+
+```
+
+```
+
+Row2 {data-height=700}
+-----------------------------------------------------------------------
+
+### SQL Output
+
+```{r}
+# DT::datatable(dataset, options = list(
+#   pageLenth = 25
+# ))
+```
