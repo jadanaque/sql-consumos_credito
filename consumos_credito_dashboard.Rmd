@@ -4,6 +4,7 @@ author: "Javier Adanaque"
 output:
   flexdashboard::flex_dashboard:
     vertical_layout: fill
+    theme: flatly
 ---
 
 ```{r setup, include=FALSE}
@@ -13,17 +14,18 @@ library(plotly)
 library(tidyverse)
 library(lubridate)
 library(RColorBrewer)
-library(googleVis)
+library(ggthemes)
+library(extrafont)
+#library(googleVis)
 
 # Reading data
 db_consumos <- read_csv("data/query_output-consumos_abril.csv")
 
-#"ISO-8859-1"
-#"ISO-8859-2"
+names(db_consumos) <- tolower(names(db_consumos))
 
 ```
 
-General
+An&aacute;lisis
 =======================================================================
 
 
@@ -32,7 +34,33 @@ Column1 {data-width=530}
 
 ### Distribuci&oacute;n Diaria
 
-```{r}
+```{r calendario}
+# Grouping and summarizing
+db_consumos <- db_consumos %>%
+  mutate(fecha = ymd(fecha))
+
+db_consumos_daily <- db_consumos %>%
+  group_by(fecha) %>%
+  summarize(importe = sum(importe)) %>%
+  mutate(dia_sem = wday(fecha),
+         dia_sem_label = wday(fecha, label = TRUE),
+         semana = isoweek(fecha+1))
+  
+
+
+pcal <- ggplot(db_consumos_daily, aes(semana, -dia_sem, fill = importe)) +
+  geom_tile(colour = "#76a7fa") +
+  scale_fill_continuous_tableau() +
+  scale_y_continuous(breaks = -7:-1, labels = c("Sab", "Vie", "Jue", "Mie", "Mar", "Lun", "Dom")) +
+  scale_x_continuous(breaks = NULL) +
+  theme_minimal() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = "right",
+        legend.direction = "vertical")
+#scale_fill_continuous(low = "#F0F8FF", high = "#08306b")
+
+ggplotly(pcal)  # Todo: outline colors, labels, text when mouse hovering
 
 ```
 
