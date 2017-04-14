@@ -66,7 +66,30 @@ ggplotly(pcal)  # Todo: outline colors, labels, text when mouse hovering
 
 ### Macrogiros
 
-```{r}
+```{r macrogiros}
+# Consideramos sólo el comportamiento sabatino, que observamos que es donde hay mayor consumo con tarjeta
+p_macrogiro <- db_consumos %>%
+    filter(fecha %in% ymd(c('20160402','20160409','20160416', '20160423','20160430'))) %>%
+    group_by(macrogiro) %>%
+    summarize(importe = sum(importe)) %>%
+    mutate(importe_prop = importe/sum(importe),
+           macrogiro2 = ifelse(importe_prop > 0.0169, macrogiro, "Otros")) %>%
+    group_by(macrogiro2) %>%
+    summarize(importe = sum(importe)) %>%
+    mutate(importe_prop = importe / sum(importe)) %>%
+    ggplot(aes(importe_prop, reorder(macrogiro2, importe_prop))) +
+    geom_segment(aes(yend = macrogiro2), xend = 0, colour = "grey50") +
+    geom_point(colour = "#9C0824") +
+    scale_x_continuous(breaks = seq(0, 0.4, 0.05), labels = paste0(seq(0, 0.4, 0.05)*100, "%")) +
+    labs(x = "Proporción de Consumo Sabatino",
+         y = NULL) +
+    theme_bw() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "grey80", linetype = "dashed"))
+#scale_y_discrete(labels = c("Tiendas/Almacenes Departamentales" = "Tdas./Almac. Departamentales")) +
+
+ggplotly(p_macrogiro)
 
 ```
 
