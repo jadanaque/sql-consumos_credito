@@ -16,6 +16,7 @@ library(lubridate)
 library(RColorBrewer)
 library(ggthemes)
 library(extrafont)
+library(stringr)
 #library(googleVis)
 
 # Reading data
@@ -98,7 +99,63 @@ Column2 {data-width=470}
 
 ### Tiendas de Principales Macrogiros
 
-```{r}
+```{r macrogiros_tiendas}
+db_consumos_tienda <- db_consumos %>%
+  filter(fecha %in% ymd(c('20160402','20160409','20160416', '20160423','20160430'))) %>%
+  group_by(macrogiro) %>%
+  mutate(importe_macro = sum(importe)) %>%
+  ungroup() %>%
+  filter(importe_macro/sum(importe) > 0.1) %>%  # Observaciones (transacciones) cuyo macrogiro represente más del 10% del consumo sabatino
+  mutate(tienda_corregida = str_trim(gsub("[0-9]*", "", tienda)))
+
+for (i in 1:nrow(db_consumos_tienda)) {
+  if (str_detect(db_consumos_tienda$tienda_corregida[i], "CARSA")) {
+    db_consumos_tienda$tienda_corregida[i] <- "CARSA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "[vV][eE][Aa]")) {
+      db_consumos_tienda$tienda_corregida[i] <- "PLAZA VEA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "[Ww][oO][nN][gG]")) {
+      db_consumos_tienda$tienda_corregida[i] <- "E WONG"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)hiraoka")) {
+      db_consumos_tienda$tienda_corregida[i] <- "HIRAOKA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)metro")) {
+      db_consumos_tienda$tienda_corregida[i] <- "METRO"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)TOP[IY] ?TOP")) {
+      db_consumos_tienda$tienda_corregida[i] <- "TOPITOP"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)TOTTUS")) {
+      db_consumos_tienda$tienda_corregida[i] <- "TOTTUS"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)CURACAO")) {
+      db_consumos_tienda$tienda_corregida[i] <- "CURACAO"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)ELEKTRA")) {
+      db_consumos_tienda$tienda_corregida[i] <- "ELEKTRA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)EFE")) {
+      db_consumos_tienda$tienda_corregida[i] <- "TIENDAS EFE"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)BATAWA")) {
+      db_consumos_tienda$tienda_corregida[i] <- "BATAWA"  # Only one insignificant transaction. Used only to keep it different from BATA
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)BATA")) {
+      db_consumos_tienda$tienda_corregida[i] <- "BATA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)pass?arela")) {
+      db_consumos_tienda$tienda_corregida[i] <- "PASSARELA"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)hilfiger")) {
+      db_consumos_tienda$tienda_corregida[i] <- "HILFIGER"
+  } else if (str_detect(db_consumos_tienda$tienda_corregida[i], "(?i)platan")) {
+      db_consumos_tienda$tienda_corregida[i] <- "PLATANITOS"
+  }
+}
+
+db_consumos_tienda <- db_consumos_tienda %>%
+  group_by(macrogiro, tienda_corregida) %>%
+  summarise(importe = sum(importe),
+            n = n()) %>%
+  filter(row_number(desc(importe)) <= 5) %>%
+  ungroup
+
+
+# ptrns <- c("vivanda", "tottus", "hiraoka", "mass")
+# sapply(paste0("(?i)", ptrns), function(pt){
+#     db_consumos_tienda %>%
+#         filter(str_detect(tienda_corregida, pt)) %>%
+#         summarise(importe = sum(importe))
+# })
 
 ```
 > Electrónica / Supermercados / Ropa y Accesorios
