@@ -149,6 +149,18 @@ db_consumos_tienda <- db_consumos_tienda %>%
   filter(row_number(desc(importe)) <= 5) %>%
   ungroup
 
+p_macr_tienda <- ggplot(db_consumos_tienda, aes(importe, reorder(tienda_corregida, importe))) +
+  geom_segment(aes(yend = tienda_corregida), xend = 0, colour = "grey50") +
+  geom_point(colour = "#9c0824") +
+  facet_grid(macrogiro ~ ., scales="free_y") +
+  labs(x = "Consumo Sabatino en Soles",
+       y = NULL) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "grey80", linetype = "dashed"))
+
+plotly_build(p_macr_tienda)
 
 # ptrns <- c("vivanda", "tottus", "hiraoka", "mass")
 # sapply(paste0("(?i)", ptrns), function(pt){
