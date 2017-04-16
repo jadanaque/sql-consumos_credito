@@ -34,7 +34,7 @@ An&aacute;lisis
 Column1 {data-width=530}
 -----------------------------------------------------------------------
 
-### Distribuci&oacute;n Diaria
+### 1. Distribuci&oacute;n Diaria
 
 ```{r calendario}
 # Grouping and summarizing
@@ -66,7 +66,7 @@ ggplotly(pcal)  # Todo: outline colors, labels, text when mouse hovering
 
 ```
 
-### Macrogiros
+### 2. Macrogiros
 
 ```{r macrogiros}
 # Consideramos sólo el comportamiento sabatino, que observamos que es donde hay mayor consumo con tarjeta
@@ -98,7 +98,7 @@ ggplotly(p_macrogiro)
 Column2 {data-width=470}
 -----------------------------------------------------------------------
 
-### Tiendas de Principales Macrogiros
+### 3. Tiendas de Principales Macrogiros
 
 ```{r macrogiros_tiendas}
 db_consumos_tienda <- db_consumos %>%
@@ -171,9 +171,8 @@ plotly_build(p_macr_tienda)
 # })
 
 ```
-> Electrónica / Supermercados / Ropa y Accesorios
 
-### Tiendas Top: Transacciones
+### 4. Tiendas Top: #Transacciones
 
 ```{r tiendastop_transacciones, fig.width=8, fig.height=5}
 transacciones <- db_consumos_tienda$n
