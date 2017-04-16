@@ -34,7 +34,7 @@ An&aacute;lisis
 Column1 {data-width=530}
 -----------------------------------------------------------------------
 
-### 1. Distribuci&oacute;n Diaria
+### 1. Calendario: Distribuci&oacute;n Diaria del Consumo
 
 ```{r calendario}
 # Grouping and summarizing
