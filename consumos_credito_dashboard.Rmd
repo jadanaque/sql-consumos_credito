@@ -216,22 +216,28 @@ print(p_tdas_transacc)
 SQL {data-orientation=rows}
 =======================================================================
 
-Row1 {data-width=300}
+Row1 {data-height=200}
 -----------------------------------------------------------------------
 
 ### SQL Query
 
 ```
-
+SELECT FECTRA AS FECHA, DESCMCGIR AS MACROGIRO, DESCGIRCOM AS GIRO, DESMOV AS TIENDA, SUM(IMPAFE) AS IMPORTE
+FROM BDFINANCIERA.consumos_abril_mayo2016
+WHERE FECTRA<20160501
+GROUP BY FECTRA, DESCMCGIR, DESCGIRCOM, DESMOV
+ORDER BY FECTRA, DESCMCGIR, DESCGIRCOM, DESMOV
 ```
+> El query se ejecutó en MySQL y el resultado se exportó a formato CSV.
+> Como siempre, la data requirió más procesamiento para realizar el análisis. Este  procesamiento y análisis se trabajó en R.
 
-Row2 {data-height=700}
+Row2 {data-height=800}
 -----------------------------------------------------------------------
 
-### SQL Output
+### SQL Query Output
 
 ```{r}
-# DT::datatable(dataset, options = list(
-#   pageLenth = 25
-# ))
+DT::datatable(sample_n(db_consumos, 1000),
+              caption = 'Query Output: Arroja 94,361 registros. Aquí se observa sólo una muestra aleatoria de 1,000.'
+              )
 ```
