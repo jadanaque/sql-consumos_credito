@@ -51,10 +51,12 @@ db_consumos_daily <- db_consumos %>%
 
 
 pcal <- ggplot(db_consumos_daily, aes(semana, -dia_sem, fill = importe)) +
-  geom_tile(colour = "#76a7fa") +
+  geom_tile(colour = "#9C0824") +
   scale_fill_continuous_tableau() +
   scale_y_continuous(breaks = -7:-1, labels = c("Sab", "Vie", "Jue", "Mie", "Mar", "Lun", "Dom")) +
   scale_x_continuous(breaks = NULL) +
+  labs(y = NULL,
+       x = NULL) +
   theme_minimal() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
@@ -62,8 +64,14 @@ pcal <- ggplot(db_consumos_daily, aes(semana, -dia_sem, fill = importe)) +
         legend.direction = "vertical")
 #scale_fill_continuous(low = "#F0F8FF", high = "#08306b")
 
-ggplotly(pcal)  # Todo: outline colors, labels, text when mouse hovering
+pcal <- plotly_build(pcal)
 
+pcal$x$data[[1]]$text <- with(arrange(db_consumos_daily, semana, desc(dia_sem)),
+                                matrix(paste0("Fecha: ", c(fecha[1:2], rep(NA, 5), fecha[3:30]), "<br>Importe: ",
+                                c(importe[1:2], rep(NA, 5), importe[3:30])), nrow = 7, ncol = 5))
+# pcal$x$data[[1]]$hoverinfo <- "text"
+
+pcal  # Todo: outline colors
 ```
 
 ### 2. Macrogiros
