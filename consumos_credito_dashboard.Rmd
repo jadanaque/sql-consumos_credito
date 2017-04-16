@@ -17,6 +17,7 @@ library(RColorBrewer)
 library(ggthemes)
 library(extrafont)
 library(stringr)
+library(waffle)
 #library(googleVis)
 
 # Reading data
@@ -172,10 +173,19 @@ plotly_build(p_macr_tienda)
 ```
 > Electrónica / Supermercados / Ropa y Accesorios
 
-### Tiendas Top
+### Tiendas Top: Transacciones
 
-```{r}
+```{r tiendastop_transacciones, fig.width=8, fig.height=5}
+transacciones <- db_consumos_tienda$n
+names(transacciones) <- db_consumos_tienda$tienda_corregida
 
+transacciones <- transacciones[transacciones>20]
+
+p_tdas_transacc <- waffle(sort(transacciones, decreasing = TRUE)/5, rows = 14, size = 1, colors = tableau_color_pal("tableau20")(11)) +
+  labs(x = "1 cuadrado = 5 transacciones") +
+  theme(axis.title.x = element_text(face = "bold", size = 12))
+
+print(p_tdas_transacc)
 ```
 
 SQL {data-orientation=rows}
