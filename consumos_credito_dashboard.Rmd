@@ -99,7 +99,11 @@ p_macrogiro <- db_consumos %>%
           panel.grid.major.y = element_line(colour = "grey80", linetype = "dashed"))
 #scale_y_discrete(labels = c("Tiendas/Almacenes Departamentales" = "Tdas./Almac. Departamentales")) +
 
-ggplotly(p_macrogiro)
+p_macrogiro <- plotly_build(p_macrogiro)
+
+p_macrogiro$x$data[[2]]$text <- gsub("reorder\\(|, importe_prop\\)", "", p_macrogiro$x$data[[2]]$text)
+
+p_macrogiro
 
 ```
 
