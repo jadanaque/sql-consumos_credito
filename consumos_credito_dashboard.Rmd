@@ -165,6 +165,7 @@ db_consumos_tienda <- db_consumos_tienda %>%
 p_macr_tienda <- ggplot(db_consumos_tienda, aes(importe, reorder(tienda_corregida, importe))) +
   geom_segment(aes(yend = tienda_corregida), xend = 0, colour = "grey50") +
   geom_point(colour = "#9c0824") +
+  scale_x_continuous(expand = c(0.02, 0)) +
   facet_grid(macrogiro ~ ., scales="free_y") +
   labs(x = "Consumo Sabatino en Soles",
        y = NULL) +
@@ -173,7 +174,20 @@ p_macr_tienda <- ggplot(db_consumos_tienda, aes(importe, reorder(tienda_corregid
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_line(colour = "grey80", linetype = "dashed"))
 
-plotly_build(p_macr_tienda)
+p_macr_tienda <- plotly_build(p_macr_tienda)
+
+# 4-6
+for (i in 4:6) {
+  p_macr_tienda$x$data[[i]]$text <- gsub("reorder\\(|, importe\\)", "", p_macr_tienda$x$data[[i]]$text)
+  p_macr_tienda$x$data[[i]]$text <- gsub("tienda_corregida", "Tienda", p_macr_tienda$x$data[[i]]$text)
+  p_macr_tienda$x$data[[i]]$text <- gsub("importe", "Importe", p_macr_tienda$x$data[[i]]$text)
+}
+
+for (i in 1:3) {
+  p_macr_tienda$x$data[[i]]$hoverinfo <- "none"
+}
+
+p_macr_tienda
 
 # ptrns <- c("vivanda", "tottus", "hiraoka", "mass")
 # sapply(paste0("(?i)", ptrns), function(pt){
