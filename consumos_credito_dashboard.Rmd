@@ -198,7 +198,7 @@ p_macr_tienda
 
 ```
 
-### 4. Tiendas Top: #Transacciones
+### 4. Tiendas Top: #Transacciones Sabatinas
 
 ```{r tiendastop_transacciones, fig.width=8, fig.height=5}
 transacciones <- db_consumos_tienda$n
